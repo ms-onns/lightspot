@@ -13,6 +13,8 @@ export default function PlaceForm({ onAddPlace }: PlaceFormProps) {
 
     // -------------------- !
     if (placeName.trim() === "") {
+      setPlaceName("");
+      setHasLight(false);
       return;
     }
 
