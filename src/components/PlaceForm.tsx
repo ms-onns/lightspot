@@ -8,10 +8,9 @@ export default function PlaceForm({ onAddPlace }: PlaceFormProps) {
   const [placeName, setPlaceName] = useState("");
   const [hasLight, setHasLight] = useState(false);
 
-  const handleSubmit = (e: React.SubmitEvent) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // -------------------- !
     if (placeName.trim() === "") {
       setPlaceName("");
       setHasLight(false);
