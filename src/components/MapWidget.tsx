@@ -1,7 +1,13 @@
+import { MapContainer, TileLayer } from "react-leaflet";
+
 export default function MapWidget() {
   return (
-    <div className="bg-slate-200 h-96 w-full flex items-center justify-center rounded-xl">
-      Тут буде карта
-    </div>
+    <MapContainer
+      className="w-full h-[40vh] rounded-xl z-0"
+      center={[49.9935, 36.2304]}
+      zoom={13}
+    >
+      <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+    </MapContainer>
   );
 }
