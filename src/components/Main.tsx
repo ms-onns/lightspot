@@ -1,6 +1,7 @@
 import { useState } from "react";
 import PlaceCard from "./PlaceCard";
 import PlaceForm from "./PlaceForm";
+import MapWidget from "./MapWidget";
 
 export default function Main() {
   const [places, setPlaces] = useState([
@@ -25,17 +26,17 @@ export default function Main() {
     setShowOnlyLight(!showOnlyLight);
   };
 
-  const displayedPlaces = showOnlyLight
-    ? places.filter((place) => place.hasLight === true)
-    : places;
+  const displayedPlaces =
+    showOnlyLight ? places.filter((place) => place.hasLight === true) : places;
 
   return (
     <main className="flex-grow p-4 bg-gray-100">
       <PlaceForm onAddPlace={handleAddPlace} />
+      <MapWidget />
 
       <button
         onClick={handleFilter}
-        className="mb-4 bg-yellow-400 px-4 py-2 rounded font-bold"
+        className="mt-6 mb-4 bg-yellow-400 px-4 py-2 rounded font-bold"
       >
         💡 Тільки зі світлом
       </button>
