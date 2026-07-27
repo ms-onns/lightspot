@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { MapContainer, TileLayer } from "react-leaflet";
+import { MapContainer, Marker, TileLayer } from "react-leaflet";
+import { mockSpots } from "../types";
 
 export default function MapWidget() {
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -51,6 +52,9 @@ export default function MapWidget() {
         zoom={13}
       >
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+        {mockSpots.map((Spot) => (
+          <Marker key={Spot.id} position={Spot.coordinates} />
+        ))}
       </MapContainer>
     </div>
   );
