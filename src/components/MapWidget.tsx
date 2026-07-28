@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { MapContainer, Marker, TileLayer } from "react-leaflet";
+import { MapContainer, Marker, TileLayer, Popup } from "react-leaflet";
 import { mockSpots } from "../types";
 
 export default function MapWidget() {
@@ -53,7 +53,11 @@ export default function MapWidget() {
       >
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
         {mockSpots.map((spot) => (
-          <Marker key={spot.id} position={spot.coordinates} />
+          <Marker key={spot.id} position={spot.coordinates}>
+            <Popup closeButton={false}>
+              <span className="font-bold text-lg">{spot.name}</span>
+            </Popup>
+          </Marker>
         ))}
       </MapContainer>
     </div>
