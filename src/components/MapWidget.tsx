@@ -52,8 +52,8 @@ export default function MapWidget() {
         zoom={13}
       >
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-        {mockSpots.map((Spot) => (
-          <Marker key={Spot.id} position={Spot.coordinates} />
+        {mockSpots.map((spot) => (
+          <Marker key={spot.id} position={spot.coordinates} />
         ))}
       </MapContainer>
     </div>
