@@ -2,19 +2,17 @@ import { useState } from "react";
 import PlaceCard from "./PlaceCard";
 import PlaceForm from "./PlaceForm";
 import MapWidget from "./MapWidget";
+import { mockSpots } from "../types";
 
 export default function Main() {
-  const [places, setPlaces] = useState([
-    { id: 1, name: "Кав'ярня 'Світло'", hasLight: true },
-    { id: 2, name: "Коворкінг 'Генератор'", hasLight: true },
-    { id: 3, name: "Піцерія на розі", hasLight: false },
-  ]);
+  const [places, setPlaces] = useState(mockSpots);
 
   const handleAddPlace = (newPlace: { title: string; hasLight: boolean }) => {
     const newPlaceObject = {
       id: Date.now(),
       name: newPlace.title,
       hasLight: newPlace.hasLight,
+      coordinates: [49.9935, 36.2304] as [number, number],
     };
 
     setPlaces([...places, newPlaceObject]);
@@ -32,7 +30,7 @@ export default function Main() {
   return (
     <main className="flex-grow p-4 bg-gray-100">
       <PlaceForm onAddPlace={handleAddPlace} />
-      <MapWidget />
+      <MapWidget spots={displayedPlaces} />
 
       <button
         onClick={handleFilter}

@@ -1,8 +1,12 @@
 import { useState } from "react";
 import { MapContainer, Marker, TileLayer, Popup } from "react-leaflet";
-import { mockSpots } from "../types";
+import type { Spot } from "../types";
 
-export default function MapWidget() {
+interface MapWidgetProps {
+  spots: Spot[];
+}
+
+export default function MapWidget({ spots }: MapWidgetProps) {
   const [isFullscreen, setIsFullscreen] = useState(false);
 
   return (
@@ -52,7 +56,7 @@ export default function MapWidget() {
         zoom={13}
       >
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-        {mockSpots.map((spot) => (
+        {spots.map((spot) => (
           <Marker key={spot.id} position={spot.coordinates}>
             <Popup closeButton={false}>
               <span className="font-bold text-lg">{spot.name}</span>
