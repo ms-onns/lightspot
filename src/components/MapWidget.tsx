@@ -4,9 +4,10 @@ import type { Spot } from "../types";
 
 interface MapWidgetProps {
   spots: Spot[];
+  onMarkerClick: (id: number) => void;
 }
 
-export default function MapWidget({ spots }: MapWidgetProps) {
+export default function MapWidget({ spots, onMarkerClick }: MapWidgetProps) {
   const [isFullscreen, setIsFullscreen] = useState(false);
 
   return (
@@ -57,7 +58,11 @@ export default function MapWidget({ spots }: MapWidgetProps) {
       >
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
         {spots.map((spot) => (
-          <Marker key={spot.id} position={spot.coordinates}>
+          <Marker
+            key={spot.id}
+            position={spot.coordinates}
+            eventHandlers={{ click: () => onMarkerClick(spot.id) }}
+          >
             <Popup closeButton={false}>
               <span className="font-bold text-lg">{spot.name}</span>
             </Popup>

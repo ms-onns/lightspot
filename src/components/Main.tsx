@@ -19,6 +19,7 @@ export default function Main() {
   };
 
   const [showOnlyLight, setShowOnlyLight] = useState(false);
+  const [activeId, setActiveId] = useState<number | null>(null);
 
   const handleFilter = () => {
     setShowOnlyLight(!showOnlyLight);
@@ -30,7 +31,7 @@ export default function Main() {
   return (
     <main className="flex-grow p-4 bg-gray-100">
       <PlaceForm onAddPlace={handleAddPlace} />
-      <MapWidget spots={displayedPlaces} />
+      <MapWidget spots={displayedPlaces} onMarkerClick={setActiveId} />
 
       <button
         onClick={handleFilter}
@@ -45,6 +46,7 @@ export default function Main() {
             key={place.id}
             name={place.name}
             hasLight={place.hasLight}
+            isActive={place.id === activeId}
           />
         ))}
       </div>
