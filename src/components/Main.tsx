@@ -31,7 +31,11 @@ export default function Main() {
   return (
     <main className="flex-grow p-4 bg-gray-100">
       <PlaceForm onAddPlace={handleAddPlace} />
-      <MapWidget spots={displayedPlaces} onMarkerClick={setActiveId} />
+      <MapWidget
+        spots={displayedPlaces}
+        onMarkerClick={setActiveId}
+        activeId={activeId}
+      />
 
       <button
         onClick={handleFilter}
@@ -44,9 +48,11 @@ export default function Main() {
         {displayedPlaces.map((place) => (
           <PlaceCard
             key={place.id}
+            id={place.id}
             name={place.name}
             hasLight={place.hasLight}
             isActive={place.id === activeId}
+            onCardClick={setActiveId}
           />
         ))}
       </div>

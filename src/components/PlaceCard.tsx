@@ -1,18 +1,23 @@
 import { Lightbulb, LightbulbOff } from "lucide-react";
 
 interface PlaceCardProps {
+  id: number;
   name: string;
   hasLight: boolean;
   isActive: boolean;
+  onCardClick: (id: number) => void;
 }
 
 export default function PlaceCard({
   name,
   hasLight,
   isActive,
+  id,
+  onCardClick,
 }: PlaceCardProps) {
   return (
     <div
+      onClick={() => onCardClick(id)}
       className={`bg-white p-4 rounded shadow ${
         isActive ? "border-4 border-yellow-400" : ""
       }`}
