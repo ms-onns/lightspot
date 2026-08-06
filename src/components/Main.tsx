@@ -3,6 +3,7 @@ import PlaceCard from "./PlaceCard";
 import PlaceForm from "./PlaceForm";
 import MapWidget from "./MapWidget";
 import { mockSpots } from "../types";
+import Loader from "./Loader";
 
 export default function Main() {
   const [places, setPlaces] = useState(mockSpots);
@@ -20,8 +21,6 @@ export default function Main() {
 
   const [showOnlyLight, setShowOnlyLight] = useState(false);
   const [activeId, setActiveId] = useState<number | null>(null);
-
-  // ========
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -39,11 +38,7 @@ export default function Main() {
     showOnlyLight ? places.filter((place) => place.hasLight === true) : places;
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-screen text-2xl font-bold text-gray-600">
-        Завантаження даних...
-      </div>
-    );
+    return <Loader />;
   }
 
   return (
