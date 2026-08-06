@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import PlaceCard from "./PlaceCard";
 import PlaceForm from "./PlaceForm";
 import MapWidget from "./MapWidget";
-import { mockSpots } from "../types";
 import Loader from "./Loader";
+import { mockSpots } from "../types";
 
 export default function Main() {
   const [places, setPlaces] = useState(mockSpots);
@@ -21,13 +21,17 @@ export default function Main() {
 
   const [showOnlyLight, setShowOnlyLight] = useState(false);
   const [activeId, setActiveId] = useState<number | null>(null);
+
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     // TODO: Видалити setTimeout (штучну затримку) при підключенні реального API
     setTimeout(() => {
       setIsLoading(false);
-    }, 1000);
+
+      setError("Овва... Сервер не відповідає. Спробуйте пізніше.");
+    }, 2000);
   }, []);
 
   const handleFilter = () => {
@@ -41,6 +45,14 @@ export default function Main() {
     return <Loader />;
   }
 
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-screen text-2xl font-bold text-red-500 text-center px-4">
+        <h1>{error}</h1>
+      </div>
+    );
+  }
+
   return (
     <main className="flex-grow p-4 bg-gray-100">
       <PlaceForm onAddPlace={handleAddPlace} />
@@ -52,7 +64,7 @@ export default function Main() {
 
       <button
         onClick={handleFilter}
-        className="mt-6 mb-4 bg-yellow-400 px-4 py-2 rounded font-bold"
+        className="mt-6 mb-4 px-4 py-2 font-bold bg-yellow-400 rounded"
       >
         💡 Тільки зі світлом
       </button>
