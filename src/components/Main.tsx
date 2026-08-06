@@ -6,7 +6,7 @@ import Loader from "./Loader";
 import { mockSpots } from "../types";
 
 export default function Main() {
-  const [places, setPlaces] = useState(mockSpots);
+  const [places, setPlaces] = useState<typeof mockSpots>([]);
 
   const handleAddPlace = (newPlace: { title: string; hasLight: boolean }) => {
     const newPlaceObject = {
@@ -15,7 +15,6 @@ export default function Main() {
       hasLight: newPlace.hasLight,
       coordinates: [49.9935, 36.2304] as [number, number],
     };
-
     setPlaces([...places, newPlaceObject]);
   };
 
@@ -26,12 +25,21 @@ export default function Main() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // TODO: Видалити setTimeout (штучну затримку) при підключенні реального API
-    setTimeout(() => {
-      setIsLoading(false);
+    const fetchPlaces = async () => {
+      try {
+        setIsLoading(true);
 
-      setError("Овва... Сервер не відповідає. Спробуйте пізніше.");
-    }, 2000);
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+
+        setPlaces(mockSpots);
+      } catch {
+        setError("Не вдалося завантажити дані з сервера.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchPlaces();
   }, []);
 
   const handleFilter = () => {
@@ -47,7 +55,7 @@ export default function Main() {
 
   if (error) {
     return (
-      <div className="flex items-center justify-center h-screen text-2xl font-bold text-red-500 text-center px-4">
+      <div className="flex items-center justify-center h-screen px-4 text-2xl font-bold text-center text-red-500">
         <h1>{error}</h1>
       </div>
     );
@@ -64,7 +72,7 @@ export default function Main() {
 
       <button
         onClick={handleFilter}
-        className="mt-6 mb-4 px-4 py-2 font-bold bg-yellow-400 rounded"
+        className="px-4 py-2 mb-4 mt-6 font-bold bg-yellow-400 rounded"
       >
         💡 Тільки зі світлом
       </button>
