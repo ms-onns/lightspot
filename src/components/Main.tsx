@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PlaceCard from "./PlaceCard";
 import PlaceForm from "./PlaceForm";
 import MapWidget from "./MapWidget";
@@ -21,12 +21,30 @@ export default function Main() {
   const [showOnlyLight, setShowOnlyLight] = useState(false);
   const [activeId, setActiveId] = useState<number | null>(null);
 
+  // ========
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    // TODO: Видалити setTimeout (штучну затримку) при підключенні реального API
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
+  }, []);
+
   const handleFilter = () => {
     setShowOnlyLight(!showOnlyLight);
   };
 
   const displayedPlaces =
     showOnlyLight ? places.filter((place) => place.hasLight === true) : places;
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen text-2xl font-bold text-gray-600">
+        Завантаження даних...
+      </div>
+    );
+  }
 
   return (
     <main className="flex-grow p-4 bg-gray-100">
