@@ -4,6 +4,7 @@ import PlaceForm from "./PlaceForm";
 import MapWidget from "./MapWidget";
 import Loader from "./Loader";
 import { mockSpots } from "../types";
+import { Lightbulb } from "lucide-react";
 
 export default function Main() {
   const [places, setPlaces] = useState<typeof mockSpots>([]);
@@ -72,9 +73,10 @@ export default function Main() {
 
       <button
         onClick={handleFilter}
-        className="px-4 py-2 mb-4 mt-6 font-bold bg-yellow-400 rounded"
+        className="flex items-center gap-2 px-4 py-2 mb-4 mt-6 font-bold transition-colors bg-yellow-400 rounded hover:bg-yellow-500"
       >
-        💡 Тільки зі світлом
+        <Lightbulb className="w-5 h-5" />
+        Тільки зі світлом
       </button>
 
       <div className="flex flex-col gap-4">
