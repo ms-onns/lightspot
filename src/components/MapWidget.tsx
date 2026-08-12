@@ -1,6 +1,7 @@
-import { useState, useRef, useEffect } from "react";
-import type { Marker as LeafletMarker } from "leaflet";
-import { MapContainer, Marker, TileLayer, Popup } from "react-leaflet";
+import { useState } from "react";
+import Map, { Marker, NavigationControl } from "react-map-gl/maplibre";
+import "maplibre-gl/dist/maplibre-gl.css";
+import { MapPin } from "lucide-react";
 import type { Spot } from "../types";
 
 interface MapWidgetProps {
@@ -16,13 +17,11 @@ export default function MapWidget({
 }: MapWidgetProps) {
   const [isFullscreen, setIsFullscreen] = useState(false);
 
-  const markersRef = useRef<Record<number, LeafletMarker | null>>({});
-
-  useEffect(() => {
-    if (activeId !== null && markersRef.current[activeId]) {
-      markersRef.current[activeId].openPopup();
-    }
-  }, [activeId]);
+  const [viewState, setViewState] = useState({
+    latitude: 49.9935,
+    longitude: 36.2304,
+    zoom: 12,
+  });
 
   return (
     <div
@@ -65,30 +64,41 @@ export default function MapWidget({
         }
       </button>
 
-      <MapContainer
-        className="w-full h-full z-0"
-        center={[49.9935, 36.2304]}
-        zoom={13}
+      <Map
+        {...viewState}
+        onMove={(evt) => setViewState(evt.viewState)}
+        mapStyle="https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
+        style={{ width: "100%", height: "100%" }}
       >
-        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+        <NavigationControl position="top-left" />
 
         {spots.map((spot) => (
           <Marker
             key={spot.id}
-            position={spot.coordinates}
-            eventHandlers={{ click: () => onMarkerClick(spot.id) }}
-            ref={(markerElement: LeafletMarker | null) => {
-              if (markerElement) {
-                markersRef.current[spot.id] = markerElement;
-              }
+            latitude={spot.coordinates[0]}
+            longitude={spot.coordinates[1]}
+            anchor="bottom"
+            onClick={(e) => {
+              e.originalEvent.stopPropagation();
+              onMarkerClick(spot.id);
             }}
           >
-            <Popup closeButton={false}>
-              <span className="font-bold text-lg">{spot.name}</span>
-            </Popup>
+            <div
+              className={`cursor-pointer transition-transform duration-200 ${
+                activeId === spot.id ? "scale-125" : "hover:scale-110"
+              } ${spot.hasLight ? "text-yellow-400" : "text-gray-400"}`}
+            >
+              <MapPin className="w-8 h-8 fill-current drop-shadow-md" />
+
+              {activeId === spot.id && (
+                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 px-3 py-1 bg-gray-900 text-white text-xs font-bold rounded shadow-lg whitespace-nowrap">
+                  {spot.name}
+                </div>
+              )}
+            </div>
           </Marker>
         ))}
-      </MapContainer>
+      </Map>
     </div>
   );
 }
