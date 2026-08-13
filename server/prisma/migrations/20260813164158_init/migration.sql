@@ -1,0 +1,12 @@
+-- CreateTable
+CREATE TABLE "Spot" (
+    "id" SERIAL NOT NULL,
+    "name" TEXT NOT NULL,
+    "lat" DOUBLE PRECISION NOT NULL,
+    "lng" DOUBLE PRECISION NOT NULL,
+    "hasLight" BOOLEAN NOT NULL DEFAULT false,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "Spot_pkey" PRIMARY KEY ("id")
+);
