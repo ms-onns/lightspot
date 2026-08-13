@@ -75,8 +75,8 @@ export default function MapWidget({
         {spots.map((spot) => (
           <Marker
             key={spot.id}
-            latitude={spot.coordinates[0]}
-            longitude={spot.coordinates[1]}
+            latitude={spot.lat}
+            longitude={spot.lng}
             anchor="bottom"
             onClick={(e) => {
               e.originalEvent.stopPropagation();

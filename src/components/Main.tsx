@@ -14,7 +14,8 @@ export default function Main() {
       id: Date.now(),
       name: newPlace.title,
       hasLight: newPlace.hasLight,
-      coordinates: [49.9935, 36.2304] as [number, number],
+      lat: 49.9935,
+      lng: 36.2304,
     };
     setPlaces([...places, newPlaceObject]);
   };
