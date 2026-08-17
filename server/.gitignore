@@ -6,3 +6,13 @@ node_modules
 .claude/
 .windsurf/
 .agents/
+# Compiled TypeScript code
+dist/
+build/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS metadata
+.DS_Store

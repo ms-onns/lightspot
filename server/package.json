@@ -15,5 +15,8 @@
     "prisma": "^7.9.1",
     "ts-node": "^10.9.2",
     "typescript": "^7.0.2"
+  },
+  "dependencies": {
+    "@prisma/client": "^7.9.1"
   }
 }
