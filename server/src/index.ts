@@ -34,6 +34,33 @@ app.get("/api/spots", async (req: Request, res: Response) => {
   }
 });
 
+app.post("/api/spots", async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { name, lat, lng, hasLight } = req.body;
+
+    if (!name || lat === undefined || lng === undefined) {
+      res
+        .status(400)
+        .json({ error: "Missing required fields: name, lat, lng" });
+      return;
+    }
+
+    const newSpot = await prisma.spot.create({
+      data: {
+        name,
+        lat,
+        lng,
+        hasLight: hasLight ?? false,
+      },
+    });
+
+    res.status(201).json(newSpot);
+  } catch (error) {
+    console.error("Error creating spot:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`🚀 Server is running on http://localhost:${PORT}`);
 });
