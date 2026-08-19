@@ -3,11 +3,11 @@ import PlaceCard from "./PlaceCard";
 import PlaceForm from "./PlaceForm";
 import MapWidget from "./MapWidget";
 import Loader from "./Loader";
-import { mockSpots } from "../types";
+import type { Spot } from "../types";
 import { Lightbulb } from "lucide-react";
 
 export default function Main() {
-  const [places, setPlaces] = useState<typeof mockSpots>([]);
+  const [places, setPlaces] = useState<Spot[]>([]);
 
   const handleAddPlace = (newPlace: { title: string; hasLight: boolean }) => {
     const newPlaceObject = {
@@ -30,10 +30,9 @@ export default function Main() {
     const fetchPlaces = async () => {
       try {
         setIsLoading(true);
-
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-
-        setPlaces(mockSpots);
+        const response = await fetch("http://localhost:5000/api/spots");
+        const data = await response.json();
+        setPlaces(data);
       } catch {
         setError("Не вдалося завантажити дані з сервера.");
       } finally {
