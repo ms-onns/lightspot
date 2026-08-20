@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import PlaceCard from "./PlaceCard";
-import PlaceForm from "./PlaceForm";
 import MapWidget from "./MapWidget";
 import Loader from "./Loader";
 import type { Spot } from "../types";
@@ -9,22 +8,12 @@ import { Lightbulb } from "lucide-react";
 export default function Main() {
   const [places, setPlaces] = useState<Spot[]>([]);
 
-  const handleAddPlace = (newPlace: { title: string; hasLight: boolean }) => {
-    const newPlaceObject = {
-      id: Date.now(),
-      name: newPlace.title,
-      hasLight: newPlace.hasLight,
-      lat: 49.9935,
-      lng: 36.2304,
-    };
-    setPlaces([...places, newPlaceObject]);
-  };
-
   const [showOnlyLight, setShowOnlyLight] = useState(false);
   const [activeId, setActiveId] = useState<number | null>(null);
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     const fetchPlaces = async () => {
@@ -47,8 +36,14 @@ export default function Main() {
     setShowOnlyLight(!showOnlyLight);
   };
 
-  const displayedPlaces =
-    showOnlyLight ? places.filter((place) => place.hasLight === true) : places;
+  const displayedPlaces = places.filter((place) => {
+    const matchesSearch = place.name
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
+    const matchesLight = showOnlyLight ? place.hasLight === true : true;
+
+    return matchesSearch && matchesLight;
+  });
 
   if (isLoading) {
     return <Loader />;
@@ -64,7 +59,13 @@ export default function Main() {
 
   return (
     <main className="flex-grow p-4 bg-gray-100">
-      <PlaceForm onAddPlace={handleAddPlace} />
+      <input
+        className="w-full mb-6 px-4 py-3 text-gray-700 transition-colors bg-white border border-gray-300 outline-none rounded-xl shadow-sm focus:border-gray-500"
+        type="text"
+        placeholder="Пошук закладу..."
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+      />
       <MapWidget
         spots={displayedPlaces}
         onMarkerClick={setActiveId}
