@@ -4,9 +4,23 @@ export default function AdminPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Тестовий логін:", email, "Пароль:", password);
+
+    try {
+      const response = await fetch("http://localhost:5000/api/admin/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+      console.log("Відповідь сервера:", data);
+    } catch (error) {
+      console.error("Помилка з'єднання:", error);
+    }
   };
 
   return (
@@ -52,7 +66,7 @@ export default function AdminPage() {
             autoComplete="current-password"
             required
             className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all bg-gray-50 text-gray-900"
-            value={email}
+            value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>

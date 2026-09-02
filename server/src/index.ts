@@ -61,6 +61,27 @@ app.post("/api/spots", async (req: Request, res: Response): Promise<void> => {
   }
 });
 
+app.post(
+  "/api/admin/login",
+  async (req: Request, res: Response): Promise<void> => {
+    try {
+      const { email, password } = req.body;
+
+      if (email === "admin@lightspot.com" && password === "123456") {
+        res
+          .status(200)
+          .json({ success: true, message: "Авторизація успішна!" });
+        return;
+      }
+
+      res.status(401).json({ error: "Невірний логін або пароль" });
+    } catch (error) {
+      console.error("Login error:", error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  },
+);
+
 app.listen(PORT, () => {
   console.log(`🚀 Server is running on http://localhost:${PORT}`);
 });
