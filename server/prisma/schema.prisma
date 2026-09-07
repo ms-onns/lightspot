@@ -6,15 +6,20 @@ datasource db {
   provider = "postgresql"
 }
 
-// Головна таблиця закладів. Координати спеціально розбив на lat та lng, бо так зручніше шукати по мапі.
 model Spot {
   id        Int      @id @default(autoincrement())
   name      String
   lat       Float
   lng       Float
   hasLight  Boolean  @default(false)
-  
-  // Автоматичний трекінг часу (Prisma сама заповнює ці поля при створенні/апдейті)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Admin {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
