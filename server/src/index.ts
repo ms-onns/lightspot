@@ -5,6 +5,7 @@ import { Pool } from "pg";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 dotenv.config();
 
@@ -89,7 +90,17 @@ app.post(
         return;
       }
 
-      res.status(200).json({ success: true, message: "Авторизація успішна!" });
+      const token = jwt.sign(
+        { id: admin.id, email: admin.email },
+        process.env.JWT_SECRET as string,
+        { expiresIn: "12h" },
+      );
+
+      res.status(200).json({
+        success: true,
+        token,
+        admin: { id: admin.id, email: admin.email },
+      });
     } catch (error) {
       console.error("Login error:", error);
       res.status(500).json({ error: "Internal Server Error" });
