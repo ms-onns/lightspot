@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import { Pool } from "pg";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "@prisma/client";
+import bcrypt from "bcrypt";
 
 dotenv.config();
 
@@ -67,14 +68,28 @@ app.post(
     try {
       const { email, password } = req.body;
 
-      if (email === "admin@lightspot.com" && password === "123456") {
-        res
-          .status(200)
-          .json({ success: true, message: "Авторизація успішна!" });
+      if (!email || !password) {
+        res.status(400).json({ error: "Email та пароль обов'язкові" });
         return;
       }
 
-      res.status(401).json({ error: "Невірний логін або пароль" });
+      const admin = await prisma.admin.findUnique({
+        where: { email },
+      });
+
+      if (!admin) {
+        res.status(401).json({ error: "Невірний логін або пароль" });
+        return;
+      }
+
+      const isValidPassword = await bcrypt.compare(password, admin.password);
+
+      if (!isValidPassword) {
+        res.status(401).json({ error: "Невірний логін або пароль" });
+        return;
+      }
+
+      res.status(200).json({ success: true, message: "Авторизація успішна!" });
     } catch (error) {
       console.error("Login error:", error);
       res.status(500).json({ error: "Internal Server Error" });
