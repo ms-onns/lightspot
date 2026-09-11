@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function AdminPage() {
+export default function AdminLoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -17,7 +17,13 @@ export default function AdminPage() {
       });
 
       const data = await response.json();
-      console.log("Відповідь сервера:", data);
+
+      if (response.ok && data.token) {
+        localStorage.setItem("lightspot_token", data.token);
+        console.log("Токен успішно збережено в localStorage!", data.token);
+      } else {
+        console.error("Помилка авторизації:", data.error);
+      }
     } catch (error) {
       console.error("Помилка з'єднання:", error);
     }

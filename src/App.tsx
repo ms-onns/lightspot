@@ -2,7 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
 import Main from "./components/Main";
 import SpotPage from "./pages/SpotPage";
-import Admin from "./pages/AdminPage";
+import AdminLoginPage from "./pages/AdminLoginPage";
 
 export default function App() {
   return (
@@ -12,7 +12,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Main />} />
         <Route path="/spot/:id" element={<SpotPage />} />
-        <Route path="/admin" element={<Admin />} />
+        <Route path="/admin" element={<AdminLoginPage />} />
       </Routes>
     </div>
   );
