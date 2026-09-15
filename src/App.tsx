@@ -3,6 +3,7 @@ import Header from "./components/Header";
 import Main from "./components/Main";
 import SpotPage from "./pages/SpotPage";
 import AdminLoginPage from "./pages/AdminLoginPage";
+import AdminDashboardPage from "./pages/AdminDashboardPage";
 
 export default function App() {
   return (
@@ -13,6 +14,7 @@ export default function App() {
         <Route path="/" element={<Main />} />
         <Route path="/spot/:id" element={<SpotPage />} />
         <Route path="/admin" element={<AdminLoginPage />} />
+        <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
       </Routes>
     </div>
   );
