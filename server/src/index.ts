@@ -1,4 +1,4 @@
-import express, { Request, Response } from "express";
+import express, { Request, Response, NextFunction } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import { Pool } from "pg";
@@ -8,6 +8,10 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 dotenv.config();
+
+export interface AuthRequest extends Request {
+  admin?: string | jwt.JwtPayload;
+}
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -19,6 +23,35 @@ const prisma = new PrismaClient({ adapter });
 
 app.use(cors());
 app.use(express.json());
+
+const verifyAdmin = (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction,
+): void => {
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    res.status(401).json({
+      error: "Немає доступу. Токен відсутній або має невірний формат.",
+    });
+    return;
+  }
+
+  const token = authHeader.split(" ")[1];
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
+
+    req.admin = decoded;
+
+    next();
+  } catch (error) {
+    console.error("JWT Verification Error:", error);
+    res.status(403).json({ error: "Токен недійсний або прострочений." });
+    return;
+  }
+};
 
 app.get("/health", (req: Request, res: Response) => {
   res
@@ -103,6 +136,25 @@ app.post(
       });
     } catch (error) {
       console.error("Login error:", error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  },
+);
+
+app.get(
+  "/api/admin/dashboard-stats",
+  verifyAdmin,
+  async (req: AuthRequest, res: Response) => {
+    try {
+      const spotsCount = await prisma.spot.count();
+
+      res.status(200).json({
+        message: "Ласкаво просимо до секретної зони адміна!",
+        stats: { totalSpots: spotsCount },
+        adminData: req.admin,
+      });
+    } catch (error) {
+      console.error("Dashboard error:", error);
       res.status(500).json({ error: "Internal Server Error" });
     }
   },
