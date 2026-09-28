@@ -7,19 +7,28 @@ datasource db {
 }
 
 model Spot {
-  id        Int      @id @default(autoincrement())
-  name      String
-  lat       Float
-  lng       Float
-  hasLight  Boolean  @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id           Int      @id @default(autoincrement())
+  name         String
+  address      String?  
+  lat          Float
+  lng          Float
+  hasLight     Boolean  @default(false)
+  hasGenerator Boolean  @default(false)
+  hasInternet  Boolean  @default(false)
+  hasCharging  Boolean  @default(false)
+  adminId      Int?     @unique
+  admin        Admin?   @relation(fields: [adminId], references: [id])
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@unique([lat, lng])
 }
 
 model Admin {
   id        Int      @id @default(autoincrement())
   email     String   @unique
   password  String
+  spot      Spot?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
