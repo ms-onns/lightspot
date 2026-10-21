@@ -1,48 +1,16 @@
-import express, { Request, Response, NextFunction } from "express";
+import express, { Request, Response } from "express";
 import cors from "cors";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { env } from "./config/env";
 import { prisma } from "./lib/prisma";
-
-export interface AuthRequest extends Request {
-  admin?: string | jwt.JwtPayload;
-}
+import { AuthRequest, verifyAdmin } from "./middleware/auth";
 
 const app = express();
 const PORT = env.PORT;
 
 app.use(cors());
 app.use(express.json());
-
-const verifyAdmin = (
-  req: AuthRequest,
-  res: Response,
-  next: NextFunction,
-): void => {
-  const authHeader = req.headers.authorization;
-
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    res.status(401).json({
-      error: "Немає доступу. Токен відсутній або має невірний формат.",
-    });
-    return;
-  }
-
-  const token = authHeader.split(" ")[1];
-
-  try {
-    const decoded = jwt.verify(token, env.JWT_SECRET as string);
-
-    req.admin = decoded;
-
-    next();
-  } catch (error) {
-    console.error("JWT Verification Error:", error);
-    res.status(403).json({ error: "Токен недійсний або прострочений." });
-    return;
-  }
-};
 
 app.get("/health", (req: Request, res: Response) => {
   res
