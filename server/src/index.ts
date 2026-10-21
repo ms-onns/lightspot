@@ -1,11 +1,9 @@
 import express, { Request, Response, NextFunction } from "express";
 import cors from "cors";
-import { Pool } from "pg";
-import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { env } from "./config/env";
+import { prisma } from "./lib/prisma";
 
 export interface AuthRequest extends Request {
   admin?: string | jwt.JwtPayload;
@@ -13,11 +11,6 @@ export interface AuthRequest extends Request {
 
 const app = express();
 const PORT = env.PORT;
-
-const connectionString = env.DATABASE_URL;
-const pool = new Pool({ connectionString });
-const adapter = new PrismaPg(pool);
-const prisma = new PrismaClient({ adapter });
 
 app.use(cors());
 app.use(express.json());
