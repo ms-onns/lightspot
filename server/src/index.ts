@@ -1,22 +1,20 @@
 import express, { Request, Response, NextFunction } from "express";
 import cors from "cors";
-import dotenv from "dotenv";
 import { Pool } from "pg";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-
-dotenv.config();
+import { env } from "./config/env";
 
 export interface AuthRequest extends Request {
   admin?: string | jwt.JwtPayload;
 }
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = env.PORT;
 
-const connectionString = process.env.DATABASE_URL;
+const connectionString = env.DATABASE_URL;
 const pool = new Pool({ connectionString });
 const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
@@ -41,7 +39,7 @@ const verifyAdmin = (
   const token = authHeader.split(" ")[1];
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
+    const decoded = jwt.verify(token, env.JWT_SECRET as string);
 
     req.admin = decoded;
 
@@ -125,7 +123,7 @@ app.post(
 
       const token = jwt.sign(
         { id: admin.id, email: admin.email },
-        process.env.JWT_SECRET as string,
+        env.JWT_SECRET as string,
         { expiresIn: "12h" },
       );
 
